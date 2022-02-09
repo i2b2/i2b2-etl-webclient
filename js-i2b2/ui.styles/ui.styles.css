@@ -1,0 +1,60 @@
+
+/*
+ * Style for a splitter that's draggable over a left-hand-side UI and a right-hand-side UI. 
+ *    Height of the splitter spans the entire width of its containing element.
+ *    Use inline style elements to override the defaults
+ */
+.vertical_splitter 
+{
+	position: absolute;
+	top: 0px;
+	left: 200px;
+    width: 6px;
+    bottom: 0%;
+    background-color: #BBCCEE;
+    background-image: url('../../assets/images/splitter.handle.image.gif');
+    background-repeat: no-repeat;
+    background-position:center;
+    cursor: ew-resize;
+    z-index:99;
+}
+
+DIV#crcQueryToolBox DIV#qryToolFooter {
+    display: flex;
+}
+
+#editDerivedConceptDialog input:disabled {
+    cursor: not-allowed;
+}
+
+.displayEditDerivedConceptBtn {
+    display: block;
+}
+
+.hideEditDerivedConceptBtn {
+    display: none;
+}
+
+.protected_div {
+    display: none;
+}
+
+.derived_lock_icon .protected_div {
+    display: inline-block;
+}
+
+.derived_lock_icon img.defaultIcon {
+    display: inline-block;
+}
+
+img.addIcon {
+    display: none;
+}
+
+.derived_lock_icon img.addIcon {
+    display: block;
+    float: right;
+    margin-left: 5px;
+    width: 14px;
+    height: 14px;
+}

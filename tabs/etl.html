@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=8,11" />
+  <title>i2b2 Web Client</title>
+</head>
+
+<body>
+  <div class="bodyBox i2b2-etl yui-skin-sam" id="i2b2etl.bodyBox" style="width: 100%; height: 538px;">
+
+    <!-- ###################   < Data upload and delete box > ######################################### -->
+
+    <div id="controller-box" class="StatusBoxConcept" oncontextmenu="return false" style="height: 146px;">
+      <div id="databoxContainer" class="databox-container">
+        <div id="instructionsContainer" class="instruction-container">
+          <div class="note-contents">
+            <p class="instruction-contents">
+              <strong style="color: red;">**</strong> Please make sure to follow the file naming conventions. Respective file name should ends with concepts.csv, concept_maps.csv, mrn_map.csv, facts.csv.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="hr-line">
+
+      <div class="load-files-box">
+        <div class="box">
+          <input type="file" name="file-1[]" id="file-1" class="inputfile inputfile-1"
+            data-multiple-caption="{count} files selected" multiple="" accept=".csv, .xlsx">
+          <label class="inputfile-label etl-button-border" for="file-1"><svg class="svg-icon-fill"
+              xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 24 17">
+              <path
+                d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z">
+              </path>
+            </svg> <span>Choose a file…</span></label>
+        </div>
+
+        <!-- <div class="dropdown_list">
+          <select id='selectList' onchange='changeDropdown(this);'></select>
+        </div> -->
+      </div>
+
+
+      <div id="deleteData" class="delete-data-box">
+        <button id="etl-delete-btn" class="etl-button etl-button-border disabled-element" onclick="deleteData();"><svg class="svg-icon-fill"
+            xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 26 20">
+            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+          </svg>Delete</button>
+        
+        <button id="etl-undo-btn" class="etl-button etl-button-border disabled-element" onclick="undoData();">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path 
+              d="M5.33929 4.46777H7.33929V7.02487C8.52931 6.08978 10.0299 5.53207 11.6607 5.53207C15.5267 5.53207 18.6607 8.66608 18.6607 12.5321C18.6607 16.3981 15.5267 19.5321 11.6607 19.5321C9.51025 19.5321 7.58625 18.5623 6.30219 17.0363L7.92151 15.8515C8.83741 16.8825 10.1732 17.5321 11.6607 17.5321C14.4222 17.5321 16.6607 15.2935 16.6607 12.5321C16.6607 9.77065 14.4222 7.53207 11.6607 7.53207C10.5739 7.53207 9.56805 7.87884 8.74779 8.46777L11.3393 8.46777V10.4678H5.33929V4.46777Z"
+              fill="currentColor"/>
+          </svg>
+          Undo
+        </button>
+      </div>
+
+
+      <!-- #####################  <Delete Dialog Box> ############################### -->
+
+      <div id="dialogDelete" style="display:none;">
+        <div class="hd" style="background:#6677AA;">Delete Data</div>
+        <div class="bd"> <br />
+          <div style="font-size:12px; margin-left:10px">
+            Are you sure you want to delete data?</div>
+          <div style="height:15px;"></div>
+        </div>
+      </div>
+      <!-- #####################  </Delete Dialog Box> ############################### -->
+
+      <!-- #####################  <Undo Dialog Box> ############################### -->
+
+        <div id="dialogUndo" style="display:none;">
+          <div class="hd" style="background:#6677AA;">Undo Data</div>
+          <div class="bd"> <br />
+            <div style="font-size:12px; margin-left:10px">
+              Are you sure you want to undo data?</div>
+            <div style="height:15px;"></div>
+          </div>
+        </div>
+        <!-- #####################  </Undo Dialog Box> ############################### -->
+
+
+      <!-- #####################  < Status > ############################### -->
+      <div class="StatusBox">
+        <div id="status-workspace" class="messagebox-workspaces" oncontextmenu="return false">
+
+          <div id="fileUploadStatus">
+            <!-- ############## file details ###### -->
+            <span id="uploadedFileNames" class="file-upload-details response-message-box"></span>
+            <span id="uploadedFileTotalSize" class="file-upload-details response-message-box"></span>
+
+            <!-- ######### <upload file progressbar> ######### -->
+            <div class="progress-bar response-message-box" id="progressBar" style="display: none;">
+              <div class="progress-bar-fill">
+                <span class="progress-bar-text">0%</span>
+              </div>
+            </div>
+            <!-- ######### </upload file progressbar> ######### -->
+
+          </div>
+
+          <div id="apiResponse" class="response-message-box">
+            <span class="file-upload-details"></span>
+          </div>
+
+        </div>
+      </div>
+      <div id="logApiResponse" class="etl-logs-box">
+        <pre class="etl-log-details"></pre>
+      </div>
+
+      <!-- #####################  </Status > ############################### -->
+
+    </div>
+
+
+  </div>
+</body>
+  
+</html>

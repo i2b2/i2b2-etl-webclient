@@ -1,0 +1,414 @@
+#controller-box {
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+.messagebox-workspaces {
+    width: 98%;
+    height: 115px;
+    font-size: 12px;
+    line-height: 16px;
+    background: white none repeat scroll 0%;
+    border: 1px solid #667788;
+    padding: 1px 5px;
+    overflow: auto;
+}
+
+.etl-status-box {
+    font: 13px/1.231 arial,helvetica,clean,sans-serif;
+    font-family: arial,helvetica;
+    font-size: 12px;
+    line-height: 16px;
+    white-space: nowrap;
+    width: 799px;
+    top: 12px;
+    position: relative;
+    margin-bottom: 17px;
+}
+
+.progress-bar {
+    white-space: nowrap;
+    font: 13px/1.231 arial,helvetica,clean,sans-serif;
+    font-family: arial,helvetica;
+    font-size: 12px;
+    line-height: 16px;
+    margin-top: 5px;
+    height: 17px;
+    width: 300px;
+    border-radius: 2px;
+    background: hsl(0, 0%, 100%);
+    background-color: #eee;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+}
+
+.progress-bar-fill {
+    white-space: nowrap;
+    font: 13px/1.231 arial,helvetica,clean,sans-serif;
+    font-family: arial,helvetica;
+    font-size: 12px;
+    line-height: 16px;
+    height: 100%;
+    width: 0%;
+    border-radius: 2px;
+    background: #bbccee;
+    display: flex;
+    align-items: center;
+    transition: width 0.25s;
+}
+
+.progress-bar-text {
+    margin-left: 10px;
+    font-weight: bold;
+    color: #6677aa;
+}
+
+p.instruction-contents {
+    font: 13px/1.231 arial,helvetica,clean,sans-serif;
+    font-family: arial,helvetica;
+    font-size: 12px;
+    line-height: 16px;
+    margin: auto 0;
+    text-align: justify;
+    word-break: break-word;
+    width: auto;
+    white-space: normal;
+}
+
+p.main-font {
+    font-size: 13px;
+}
+
+hr.hr-line {
+    height: 2px;
+    border-width: 0px;
+    color: #667788;
+    background-color: #667788;
+    margin: 7px 0px;
+}
+
+/* **************<input file>**************** */
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.inputfile + label {
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+    background-color: #6677aa;
+    display: inline-block;
+    height: 20px;
+    border-radius: 2px;
+}
+
+.inputfile:focus + label,
+.inputfile + label:hover {
+    background-color: #7687bf;
+}
+
+
+
+.inputfile + label {
+	cursor: pointer; /* "hand" cursor */
+}
+
+.inputfile-label {
+    height: 23px;
+    padding-left: 5px;
+    padding-top: 2px;
+    padding-right: 5px;
+}
+
+.svg-icon-fill {
+    fill: white;
+    vertical-align: bottom;
+}
+
+button.etl-button {
+    padding: 0%;
+    background-color: #6677aa;
+    color: white;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 122px;
+    display: inline-block;
+    line-height: 24px;
+    font-weight: 600;
+    font-size: 12px;
+    border-radius: 2px;
+}
+
+.etl-button:hover {
+    background-color: #7687bf;
+}
+
+.etl-button-border {
+    border: 1px solid #667788;
+}
+
+.file-upload-details {
+    line-height: normal;
+    white-space: pre;
+    display: block;
+}
+
+.etl-note {
+    color: red;
+}
+
+.response-message-box {
+    margin: 10px;
+}
+
+.etl-logs-box {
+    color: white;
+    margin-top: 8px;
+    padding: 1px 5px;
+    width: 98%;
+    height: 232px;
+    font-size: 12px;
+    background: black none repeat scroll 0%;
+    border: 1px solid #667788;
+    overflow: auto;
+}
+
+.etl-log-details {
+    padding: 1px 15px;
+    display: block;
+    line-height: normal;
+}
+
+.etl-button svg {
+    vertical-align: top;
+}
+
+
+/* #########< Tabulation Report >########## */
+.tabulation-report-container {
+    display: grid;
+    grid-template-columns: repeat(12,1fr);
+    grid-template-rows: auto;
+    gap: 3px;
+    width: 100%;
+    height: auto;
+}
+
+.tabulation-report-container .report-controllers {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    border-bottom: 1px solid #667788;
+    background-color: #BBCCEE;
+}
+
+.tabulation-report-container .report-controllers .table-report-fieldset {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    padding: 0.3rem;
+}
+
+#tableReportFields.table-report-input-fields {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+#tableReportButtons.table-report-input-button {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+button.table-report-btn {
+    padding: 0 2px;
+    margin: 2px 0;
+    background-color: #6677aa;
+    color: white;
+    border: 1px solid #667788;
+    cursor: pointer;
+    line-height: 21px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 2px;
+}
+
+button.table-report-btn:hover:not([disabled]) {
+    background-color: #7687bf;
+}
+
+.disabled-element:disabled, .disabled-element[disabled] {
+    /* Applicable for disabled element */
+    cursor: not-allowed;
+}
+
+button.disabled-element:disabled, button.disabled-element[disabled] {
+    /* Applicable only for disabled button */
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.tabulation-report-container .report {
+    grid-column: 2 / 12;
+    grid-row: 2;
+}
+
+/* ########< Report table >####### */
+.table-container .table-body-container tr td {
+    text-align: left;
+    box-sizing: border-box;
+    /* display: block; */
+    /* display: -webkit-inline-box; */
+    max-width: 6rem;
+    min-width: 6rem;
+    min-height: 4.9rem;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+    /* vertical-align: top; */
+    padding: 0 4px;
+    height:50px
+}
+
+.table-container .table-body-container tr:first-of-type td:first-of-type {
+    font-weight: 600;
+    color: rgb(255, 255, 153);
+}
+
+.table-container .table-body-container tr:not(:first-child) td:not(:first-child) {
+    text-align: center;
+}
+
+/* First row of table */
+.table-container .table-body-container tr:first-of-type td {
+    background-color: #6677AA;
+    color: white;
+    border: 1px solid #BBCCEE;
+    border-radius: 2px;
+    text-align: center;
+    padding: 1px 0;
+    min-height: 2.9rem;
+}
+
+/* rest of rows of table */
+.table-container .table-body-container tr:not(:first-child) td {
+    background-color: #dee2ed;
+    color: black;
+    border: 1px solid #BBCCEE;
+    border-radius: 2px;
+    padding: 1px 4px;
+}
+
+.table-container .table-body-container tr td.over {
+    border: 2px dashed rgba(102, 102, 102, 0.575);
+    background-color: rgba(102, 102, 102, 0.199);
+    text-align: center;
+    position: relative;
+}
+
+.table-container .table-body-container tr:not(:first-child):hover td {
+    background-color: #bdc5db;
+}
+
+.table-container {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto;
+    box-sizing: border-box;
+    table-layout:fixed; 
+}
+
+.table-body-container {
+    width: max-content;
+}
+
+table.table-container tr:first-of-type td:last-of-type, table.table-container tr:last-of-type td:first-of-type {
+    visibility: hidden;
+} 
+
+table.table-container tr td .tooltiptext {
+    visibility: hidden;
+    background-color: white;
+    color: black;
+    text-align: left;
+    border-radius: 3px;
+    padding: 5px 2px;
+    border: 1px solid black;
+  
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+}
+  
+table.table-container tr td:hover .tooltiptext {
+    visibility: visible;
+}
+
+.dropdown-check-list {
+    display: inline-block;
+}
+  
+.dropdown-check-list .anchor {
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    padding: 5px 50px 5px 10px;
+    border: 1px solid #7c7070;
+}
+  
+.dropdown-check-list .anchor:after {
+    position: absolute;
+    content: "";
+    border-left: 2px solid black;
+    border-top: 2px solid black;
+    padding: 5px;
+    right: 10px;
+    top: 20%;
+    -moz-transform: rotate(-135deg);
+    -ms-transform: rotate(-135deg);
+    -o-transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+    transform: rotate(-135deg);
+}
+  
+.dropdown-check-list .anchor:active:after {
+    right: 8px;
+    top: 21%;
+}
+  
+.dropdown-check-list ul.items {
+    padding: 2px;
+    display: none;
+    margin: 0;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+  
+.dropdown-check-list ul.items li {
+    list-style: none;
+}
+  
+.dropdown-check-list.visible .anchor {
+    color: #0094ff;
+}
+  
+.dropdown-check-list.visible .items {
+    display: block;
+}
+
+.load-files-box {
+    display: flex;
+}
+
+.load-files-box .box, .load-files-box .dropdown_list {
+    margin-right: 3px;
+}
+
+#selectList {
+    padding: 3px 5px;
+}

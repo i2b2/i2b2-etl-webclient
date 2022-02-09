@@ -1,0 +1,283 @@
+.factsPage .table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+  }
+  
+  .factsPage .table {
+    width: 100%;
+    margin-bottom: 1rem;
+    background-color: transparent;
+  }
+  
+  .factsPage table {
+    border-collapse: collapse;
+  }
+  
+  .factsPage .table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+  }
+  
+  .factsPage .table td, .factsPage .table th {
+    padding: .75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+  }
+  
+  .factsPage .table tbody tr:first-child td {
+    border-top: 0px;
+  }
+  
+  .factsPage .table tbody tr:last-child, #factsByPatientNumDialog .table tbody tr:last-child {
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .factsPage th {
+    text-align: inherit;
+  }
+  
+  a#dateCol, a#dateColByPatientNum {
+    color: #000000;
+    text-decoration: none;
+  }
+  
+  .descIcon, .ascIcon {
+    font-size: 16px;
+  }
+  .hideDate {
+    display: none;
+  }
+  
+  table#factsTable_byPatientNum {
+    width: 100%;
+    text-align: left;
+    border: 1px solid #dee2e6;
+  }
+  
+  .factsPage button {
+    color: #194ab1;
+    background: transparent;
+    border: 0px;
+    text-decoration: underline;
+    padding: 0;
+    margin-right: 3px;
+  }
+  
+  button:focus {
+    outline: 0px;
+  }
+  
+  #pagination_list_by_code, #pagination_list_by_patient_id {
+    float: right;
+  }
+  
+  .patientNumList, .annotationPatientNum {
+    margin-right: 10px;
+  }
+  
+  .patientNumList table, 
+  .table-filter-by-code table, 
+  .annotationPatientNum table, 
+  .annotationFacts table,
+  .annotationBlock table {
+    border: 1px solid #dee2e6;
+  }
+  
+  .table-filter-by-code, .annotationBlock {
+    width: 100%;
+  }
+  
+  tr.selected {
+    background-color: #6677aa;
+  }
+  tr.selected a {
+    color: white;
+  }
+  
+  .sortIcon {
+    font-size: 16px;
+  }
+  
+  .annotation_container {
+    background: #6677aa;
+    height: 50px;
+  }
+  
+  .containsAnnotation {
+    border: 1px solid #dee2e6;
+    padding: 10px 12px;
+    background: #6677aa;
+    color: #ffffff;
+    margin-bottom: 10px;
+  }
+  
+  #annotation_patient_num_table tbody tr td,
+  #annotation_patient_num_table thead tr th {
+    text-align: center;
+  }
+  
+  #no_annotation_facts_pagination, #annotation_facts_pagination {
+    float: right;
+  }
+  
+  /*FORMS CSS START*/
+  .factsPage .form-group {
+    margin-bottom: 0;
+  }
+  .factsPage .form-row>.col, .factsPage .form-row>[class*=col-] {
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+  .factsPage .form-row {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -5px;
+    margin-left: -5px;
+  }
+  .factsPage .row {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-left: -15px;
+  }
+  .factsPage .col-form-label {
+    margin-bottom: 0;
+    font-size: inherit;
+    line-height: 1.5;
+  }
+  .factsPage label {
+    display: inline-block;
+    margin-bottom: .5rem;
+    font-weight: 600;
+  }
+  
+  .col, .col-1, .col-10, .col-11, .col-12, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-auto, 
+  .col-lg, .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, 
+  .col-lg-8, .col-lg-9, .col-lg-auto, .col-md, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, 
+  .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-auto, .col-sm, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, 
+  .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-auto, .col-xl, .col-xl-1, 
+  .col-xl-10, .col-xl-11, .col-xl-12, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, 
+  .col-xl-auto {
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+  
+  .factsPage .form-control-plaintext {
+    display: block;
+    margin: 0;
+    line-height: 25px;
+    color: #000000;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  
+  .annotation-row td {
+    width: 45%;
+  }
+  /* .annotation-row .form-group {
+    width: 45%;
+  } */
+  /*FORMS CSS END*/
+  
+  table#contains_annotation_facts_table {
+    margin-bottom: 0px;
+    border: 0px;
+  }
+  
+  table#contains_annotation_facts_table thead th {
+    border-top: 0px;
+    color: #000000;
+    font-weight: 600;
+  }
+  
+  #contains_annotation_block select {
+    border-radius: 4px;
+    background: #ffffff;
+    padding: 8px 10px;
+  }
+  
+  tbody#contains_annotation_block tr {
+    border-left: 1px solid #dee2e6;
+    border-right: 1px solid #dee2e6;
+  }
+  
+  table#contains_annotation_facts_table thead {
+    display: table;
+    width: 100%;
+  }
+  
+  table#contains_annotation_facts_table tr {
+    display: table;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  table#contains_annotation_facts_table tr th, table#contains_annotation_facts_table tr td {
+    width: 50%;
+  }
+  
+  table.scrollTable tbody {
+    display: block;
+    height: 127px;
+    overflow-y: scroll;
+  }
+  
+  .selectedRow input {
+    background: #bac0c3;
+    color: #1d1717;
+  }
+  
+  #contains_annotation_facts_pagination {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  #contains_annotation_block input, #contains_annotation_block textarea {
+    padding: 5px 10px;
+    border-radius: 4px;
+    width: 82%;
+    font-size: 13px;
+  }
+  
+  .infoIcon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-image: url('images/info.png');
+  }
+  
+  .factsPage {
+    margin-bottom: 20px;
+  }
+  
+  .bg_on_change {
+    background: #bac0c3 !important;
+    color: #1d1717;
+  }
+  
+  .showValueRow{
+    position:relative;
+    color: #0000ee;
+    text-decoration: underline;
+    cursor: default;
+  }
+  
+  .hideValueRow{
+    display:none;
+  }
+  
+  .hideValueRow td {
+    word-break: break-all;
+    background: #7796b8;
+    color: #000;
+  }
+  
+  .displayDivOnHover {
+    display: table-row;
+  }

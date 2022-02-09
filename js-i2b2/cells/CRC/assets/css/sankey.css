@@ -1,0 +1,155 @@
+.js-plotly-plot .plotly .modebar {
+    right: 10%;
+    top: 18px;
+}
+
+#divPlotly {
+    position: relative;
+}
+
+.ui-draggable.ui-draggable-handle.dropped {
+    left: 40% !important;
+}
+
+#divPlotly {
+    width: 100%;
+    height: 1100px;
+}
+
+.sankeyBtn {
+    background: #6677aa;
+    border: 1px solid #6677aa;
+    color: #ffffff;
+    padding: 4px 10px;
+}
+
+.sankeyBtn:disabled {
+    background-color: #b1acac;
+    border: 1px solid #848181;
+    cursor: not-allowed;
+}
+
+.sankeyFormGrp {
+    display: flex;
+}
+
+.sankeyFormGrp p {
+    margin-right: 10px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.disabled-btn {
+    cursor: not-allowed;
+    background: #a9a3a3;
+    border: 1px solid #ccc;
+    pointer-events: none;
+}
+
+#drag_box_message {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    padding-top: 20%;
+}
+
+#drag_box_message p {
+    background: #6677aa;
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.red {
+    color: red;
+}
+
+#div2 {
+    min-height: 360px;
+    min-width: 600px;
+    border: 0px solid;
+    position: absolute !important;
+    z-index: 9;
+    left: 0;
+	right: 0;
+	justify-content: flex-start;
+    top: 11%;
+    display: none;
+    align-items: center;
+	padding: 0px 10px;
+}
+
+#div2 .sdxDefaultCONCPT {
+	display: none;
+} 
+
+#div2 .svg-container .modebar-container {
+	display: none;
+}
+
+#div2 .js-plotly-plot .plotly .main-svg {
+    background: transparent !important;
+}
+
+.sankey_container {
+    background: #ffffff;
+    margin-left: 3px;
+	margin-right: 3px;
+	margin-bottom: 10px;
+    border-radius: 4px;
+    box-shadow: -2px -1px 12px 0px rgba(50, 50, 78, 0.54);
+}
+
+/*Overlay CSS*/
+#overlay {
+	position: fixed;
+	display: none;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 999;
+	cursor: pointer;
+}
+
+#overlay-text {
+	font-size: 20px;
+	color: #ffffff;
+}
+
+.overlay_inner {
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+}
+
+.overlay_content {
+	left: 50%;
+	position: absolute;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.spinner {
+	width: 75px;
+	height: 75px;
+	display: inline-block;
+	border-width: 2px;
+	border-color: rgba(255, 255, 255, 0.05);
+	border-top-color: #ffffff;
+	animation: spin 1s infinite linear;
+	border-radius: 100%;
+	border-style: solid;
+}
+
+@keyframes spin {
+	100% {
+		transform: rotate(360deg);
+	}
+}

@@ -1,0 +1,54 @@
+/* CSS */
+DIV#crcQueryToolBox DIV.tabBox.hideTab {
+	display: none;
+}
+
+DIV#crcQueryToolBox DIV#computeDerivedFactBox,
+DIV#crcQueryToolBox DIV#createDerivedConceptBox {
+    position:relative;
+	xdisplay:none;
+	background:#6677AA;
+	border:1px solid #667788;
+	color:#FFFFFF;
+	font-weight:bold;
+	font-family:arial,helvetica;
+	font-size:11px;
+	height:16px;
+	line-height:16px;
+	text-align:center;
+	color:#FFF;
+	cursor:pointer;
+	float: left;
+	margin:0px 5px 0px 0px;
+	width:72px;
+	xz-index:5;
+	overflow:hidden;
+}
+
+DIV#crcQueryToolBox DIV#createDerivedConceptBox a,
+DIV#crcQueryToolBox DIV#computeDerivedFactBox a {
+    color:#FFF;
+	display:block;
+	text-decoration:none;
+}
+
+DIV#crcQueryToolBox DIV#createDerivedConceptBox a:hover,
+DIV#crcQueryToolBox DIV#computeDerivedFactBox a:hover {
+    background-color:#7687bf;
+}
+
+DIV#crcQueryToolBox DIV#createDerivedConceptBox,
+DIV#crcQueryToolBox DIV#computeDerivedFactBox {
+	min-width: 125px;
+	padding: 0px 8px;
+}
+
+#tabEtl, #tabTabulation, #tabSankey, #tabD3, #tabFacts, #tabFactsAll {
+	display: none;
+}
+
+DIV#crcQueryToolBox DIV#createDerivedConceptBox.hide_tabs,
+DIV#crcQueryToolBox DIV#computeDerivedFactBox.hide_tabs,
+DIV#crcQueryToolBox DIV.tabBox.hide_tabs {
+	display: none !important;
+}
