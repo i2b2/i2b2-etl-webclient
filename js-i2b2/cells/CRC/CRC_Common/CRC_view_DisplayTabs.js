@@ -50,14 +50,6 @@ i2b2.CRC.view.displayTabs.modifyPathWithTitleTabulation = function(path, title, 
 	const splitConceptPath = path.split('\\');
     const givenPath = splitConceptPath.map( a => a.charAt(0).toLowerCase() + a.substr(1) );
 
-	// Let's add the conceptCode at last by deleting letest last path code
-	var lastValue = givenPath[givenPath.length - 2]
-
-	if (lastValue !== conceptCode) {
-		givenPath.splice(givenPath.length - 2, 1);
-		givenPath[givenPath.length - 1] = conceptCode
-		givenPath[givenPath.length] = ""
-	}
 	const firstValue = givenPath[1].charAt(0).toUpperCase() + givenPath[1].substr(1);
     
     let modifiedPath;
@@ -97,10 +89,15 @@ i2b2.CRC.view.displayTabs.openTab = function(evt, tabName) {
 			// document.getElementById("compute").disabled = true;
 			$('i2b2tabulation.bodyBox').show();
 			break;
+		case "PatientSetTabulation":
+			i2b2.ONT.view.nav.doRefreshAll();
+			i2b2.CRC.view.status.hide();
+			$('i2b2patientsettabulation.bodyBox').show();
+			break;
 		case "D3":
 			i2b2.CRC.view.status.hide();
 			$('i2b2d3.bodyBox').show();
-			// i2b2.ONT.view.nav.doRefreshAll();
+			i2b2.ONT.view.nav.doRefreshAll();
 			break;
 		case "Facts":
 			// i2b2.ONT.view.nav.doRefreshAll();
@@ -117,7 +114,7 @@ i2b2.CRC.view.displayTabs.openTab = function(evt, tabName) {
 		case "Sankey":
 			i2b2.CRC.view.status.hide();
 			$('i2b2sankey.bodyBox').hide();
-			// i2b2.ONT.view.nav.doRefreshAll();
+			i2b2.ONT.view.nav.doRefreshAll();
 			break;
 		default:
 			console.error("No tab available");

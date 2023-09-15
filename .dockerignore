@@ -1,0 +1,13 @@
+**/.gitignore
+**/.git
+
+# PLEASE UNCOMMENT THE FILE/DIRECTORY TO EXCLUDE
+
+# **/etl
+# **/sankey
+# **/tabulation
+# **/derived
+# etl.html
+# facts.html
+# factsAll.html
+# sankey.html

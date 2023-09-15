@@ -484,11 +484,18 @@ i2b2.ONT.view.info.SetKey = function(key, dCode) {
 	let keyEncode = encodeURI(keyJoin);
 
 	let tabulationReport = document.getElementById('tabTabulation');
+	let tabPatientTabulation = document.getElementById('tabPatientTabulation');
 	let factsTab = document.getElementById('tabFacts');
 	let sankeyTab = document.getElementById('tabSankey');
 	let d3Tab = document.getElementById('tabD3');
-
+	
 	if (hasClass(tabulationReport, 'active')) {
+		if (decodeURI(keyEncode).includes('Tabulation')) {
+			i2b2.CRC.view.tabulationReport.getTabulationReport(keyEncode);
+		} else {
+			return;
+		}
+	} else if (hasClass(tabPatientTabulation, 'active')) {
 		if (decodeURI(keyEncode).includes('Tabulation')) {
 			i2b2.CRC.view.tabulationReport.getTabulationReport(keyEncode);
 		} else {

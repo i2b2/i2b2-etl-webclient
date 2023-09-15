@@ -22,25 +22,17 @@ i2b2.events.afterCellInit.subscribe(
 	(function() {
 		let roles = i2b2.PM.model.userRoles;
 		if(roles.includes('POPULATION_FACT_VIEWER')){
-			let loginProjectName = i2b2.PM.model.login_project;
-     		let getSessionData = JSON.parse(sessionStorage.getItem('loginCredentials')); 
-     		let sessionId = getSessionData["session_id"];
-     		let username = getSessionData["user_name"];
- 
-     		let loginHeader = new Headers();
-     		loginHeader.set('Authorization', 'Basic ' + btoa(username + ":" + sessionId));
-	 		loginHeader.append('X-Project-Name', loginProjectName)
 
 			var requestOptions = {
 				method: 'GET',
-				headers: loginHeader,
+				headers: getnewAPIFetchHeader(),
 				credentials: 'include'
 			};
 	
 			
 
 			// fetch(CONCEPT_BASE_URL + "/api/derived-concepts", requestOptions)
-			fetch(CONCEPT_BASE_URL + "/cdi-api/derived-concepts", requestOptions)
+			fetch(CONCEPT_BASE_URL + "/etl/concepts", requestOptions)
 				.then((response) => {
 					i2b2.sdx.TypeControllers.MConcept.errorStatusCode = response.status;
 					if (!response.ok) {

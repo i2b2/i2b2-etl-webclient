@@ -139,6 +139,11 @@ function i2b2_BaseCell(configObj) {
 				const crcDerivedConceptFiles = ["CRC_Common/CRC_ctrlr_MQryTool.js", "CRC_Common/CRC_ctrlr_MQryStatus.js"];
 				this.cfg.files.push(...crcDerivedConceptFiles);				
 			}
+			if (env.patientSet === true) {
+				// const crcPatientSetFiles = ["CRC_Common/CRC_ctrlr_Patient_MQryStatus.js", "PatientSetTabulation/CRC_view_Patient_Set_Tabulation.js","CRC_Common/CRC_ctrlr_MQryTool.js"];
+				const crcPatientSetFiles = ["CRC_Common/CRC_ctrlr_Patient_MQryStatus.js", "CRC_Common/CRC_ctrlr_MQryTool.js"];
+				this.cfg.files.push(...crcPatientSetFiles);				
+			}
 		}
 
 		if (configObj.code === 'ONT') {
@@ -148,7 +153,9 @@ function i2b2_BaseCell(configObj) {
 				this.cfg.files.splice(2, 0, "ONT_Common/ONT_view_MNav.js");
 				this.cfg.files.splice(5, 0, "ONT_Common/ONT_view_MInfo.js");
 			} else {
-				this.cfg.files.splice(5, 0, "ONT_view_MInfo.js");
+				const derivedConceptFiles = [ "ONT_Common/ONT_ctrlr_MGeneral.js"];
+				this.cfg.files.push(...derivedConceptFiles);
+				this.cfg.files.splice(5, 0, "ONT_view_MInfo.js");	
 			}
 		}
 		// load the script files

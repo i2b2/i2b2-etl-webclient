@@ -15,23 +15,15 @@ const GENERAL_BASE_URL = window.location.origin;
 window.mainNodeDerivedData;
 
 i2b2.ONT.ctrlr.MGen.getDerivedConcept = function(modelCategories) {
-	let loginProjectName = i2b2.PM.model.login_project;
-    let getSessionData = JSON.parse(sessionStorage.getItem('loginCredentials')); 
-    let sessionId = getSessionData["session_id"];
-    let username = getSessionData["user_name"];
- 
-    let loginHeader = new Headers();
-    loginHeader.set('Authorization', 'Basic ' + btoa(username + ":" + sessionId));
-	loginHeader.append('X-Project-Name', loginProjectName)
 
 	var requestOptions = {
 		method: 'GET',
-		headers: loginHeader,
+		headers: getnewAPIFetchHeader(),
 		credentials: 'include'
 	};
 
 	// fetch(GENERAL_BASE_URL + "/api/derived-concepts", requestOptions)
-	fetch(GENERAL_BASE_URL + "/cdi-api/derived-concepts", requestOptions)
+	fetch(GENERAL_BASE_URL + "/etl/concepts", requestOptions)
 		.then((response) => {
 			return response.json();
 		})

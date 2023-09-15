@@ -18,7 +18,7 @@ const LOGIN_BASE_URL = window.location.origin;
 i2b2.PM.view.mLog.setLoginCredentials = function(sessionId, loginUsername, projectId) {
     var loginDetails = JSON.stringify({
         'session_id': sessionId,
-        'user_name': loginUsername + "~$~" + projectId
+        'user_name': loginUsername + "\\" + projectId
     });
     sessionStorage.setItem('loginCredentials', loginDetails); 
 }
@@ -147,17 +147,173 @@ function getAPIFetchHeader() {
 	}
 }
 
+function getnewAPIFetchHeader() {
+	let loginProjectName = i2b2.PM.model.login_project;
+     let getSessionData = JSON.parse(sessionStorage.getItem('loginCredentials')); 
+     let sessionId = getSessionData["session_id"];
+     let username = getSessionData["user_name"];
+ 
+     let loginHeader = new Headers();
+     loginHeader.set('Authorization', 'Basic ' + btoa(username + ":" + sessionId));
+	 loginHeader.append('X-Project-Name', loginProjectName)
+
+	return loginHeader
+}
+
+async function fetchGet (url, extraHeaders = {}){
+	try {
+		let customHeaders={
+			method:'GET',		
+			credentials: 'include',
+			headers: getnewAPIFetchHeader(),
+		} 
+		const response = await fetch(url, {
+		...customHeaders,
+		...extraHeaders,
+		}).catch((err) => {
+			// log error here..
+			throw err;
+		});
+		if (response) {
+			if (response.ok) {
+			// if HTTP-status is 200-299
+			return response;
+			}
+			let err=await response.json()
+			throw { ...new Error(), ...err };
+		} else {
+			throw new Error(`Something went wrong while fetching API: ${url}`);
+		}
+	} catch (e) {
+			// log error here..
+			if(e?.error)
+				alert(e.error)
+			else
+				alert('Network response was not ok.')
+			throw e;
+	}
+}
+
+async function fetchPost (url, body={}, extraHeaders = {}){
+	try {
+		let customHeaders={
+			method:'POST',		
+			credentials: 'include',
+			headers: getnewAPIFetchHeader(),
+		} 
+		const response = await fetch(url,  {
+			body:JSON.stringify(body),
+			...customHeaders,
+			...extraHeaders,
+		
+		}).catch((err) => {	
+			// log error here..
+			throw err;
+		});
+		if (response) {
+			if (response.ok || response.status==405) {
+			// if HTTP-status is 200-299
+			return response;
+			}
+			let err=await response.json()
+			throw { ...new Error(), ...err };
+		} else {
+			throw new Error(`Something went wrong while fetching API: ${url}`);
+		}
+		} catch (e) {
+			// log error here..
+			if(e?.error)
+				alert(e.error)
+			else
+				alert('Network response was not ok.')
+		}
+}
+
+async function fetchPut (url, body={}, extraHeaders = {}){
+	try {
+		let customHeaders={
+			method:'PUT',		
+			credentials: 'include',
+			headers: getnewAPIFetchHeader(),
+		} 
+		const response = await fetch(url,  {
+			body:JSON.stringify(body),
+			...customHeaders,
+			...extraHeaders,
+		
+		}).catch((err) => {	
+			// log error here..
+			throw err;
+		});
+		if (response) {
+			if (response.ok) {
+			// if HTTP-status is 200-299
+			return response;
+			}
+			let err=await response.json()
+			throw { ...new Error(), ...err };
+		} else {
+			throw new Error(`Something went wrong while fetching API: ${url}`);
+		}
+		} catch (e) {
+			// log error here..
+			if(e?.error)
+				alert(e.error)
+			else
+				alert('Network response was not ok.')
+			throw e;
+		}
+}
+
+async function fetchDelete (url, body={}, extraHeaders = {}){
+	try {
+		let customHeaders={
+			method:'DELETE',		
+			credentials: 'include',
+			headers: getnewAPIFetchHeader(),
+		} 
+		const response = await fetch(url,  {
+			body:JSON.stringify(body),
+			...customHeaders,
+			...extraHeaders,
+		
+		}).catch((err) => {	
+			// log error here..
+			throw err;
+		});
+		if (response) {
+			if (response.ok) {
+			// if HTTP-status is 200-299
+			return response;
+			}
+			let err=await response.json()
+			throw { ...new Error(), ...err };
+		} else {
+			throw new Error(`Something went wrong while fetching API: ${url}`);
+		}
+		} catch (e) {
+			// log error here..
+			if(e?.error)
+				alert(e.error)
+			else
+				alert('Network response was not ok.')
+			throw e;
+		}
+}
+
 i2b2.PM.view.mLog.showTabsBasedOnRoles = function(rolesArray) {
 	document.getElementById('etl-delete-btn').disabled = true;
 	document.getElementById('etl-undo-btn').disabled = true;
 	if(!(rolesArray.includes('DATA_AUTHOR')) && rolesArray.includes('POPULATION_FACT_VIEWER')){
 		document.getElementById("createDerivedConceptBox").classList.add("hide_tabs");
+		document.getElementById("createPatientSetBox").classList.add("hide_tabs");
 		document.getElementById("computeDerivedFactBox").classList.add("hide_tabs");
 		document.getElementById("tabEtl").classList.add("hide_tabs");
 		document.getElementById("tabFacts").classList.add("hide_tabs");
 		document.getElementById("tabFactsAll").classList.add("hide_tabs");
 		document.getElementById("tabSankey").classList.remove("hide_tabs");
 		document.getElementById("tabTabulation").classList.remove("hide_tabs");
+		document.getElementById("tabPatientTabulation").classList.remove("hide_tabs");
 		document.getElementById("tabD3").classList.remove("hide_tabs");
 		
 		if (env.sankey === true) {
@@ -188,12 +344,14 @@ i2b2.PM.view.mLog.showTabsBasedOnRoles = function(rolesArray) {
 	} else if(!(rolesArray.includes('DATA_AUTHOR')) && !(rolesArray.includes('POPULATION_FACT_VIEWER'))) {
 		
 		document.getElementById("createDerivedConceptBox").classList.add("hide_tabs");
+		document.getElementById("createPatientSetBox").classList.add("hide_tabs");
 		document.getElementById("computeDerivedFactBox").classList.add("hide_tabs");
 		document.getElementById("tabEtl").classList.add("hide_tabs");
 		document.getElementById("tabFacts").classList.add("hide_tabs");
 		document.getElementById("tabFactsAll").classList.add("hide_tabs");
 		document.getElementById("tabSankey").classList.add("hide_tabs");
 		document.getElementById("tabTabulation").classList.add("hide_tabs");
+		document.getElementById("tabPatientTabulation").classList.add("hide_tabs");
 		document.getElementById("tabD3").classList.add("hide_tabs");
 	}
 }

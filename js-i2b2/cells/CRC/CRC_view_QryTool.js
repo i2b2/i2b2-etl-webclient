@@ -2456,6 +2456,10 @@ i2b2.events.afterCellInit.subscribe(
 					if (env.derivedConcept === true) {
 						$('derivedConceptQryRunResultType').innerHTML = newHTML;
 					}
+
+					if (env.patientSet === true) {
+						$('patientSetQryRunResultType').innerHTML = newHTML;
+					}
 					//===========Commented for M-release===========//
 				}
 

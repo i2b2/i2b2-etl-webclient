@@ -1046,8 +1046,97 @@
          }
          return { isValidated: true };
      };
+
+     this.createPatientSetQryRun = function() {
+        // function to build and run query 
+		if (i2b2.CRC.ctrlr.currentQueryStatus != false && i2b2.CRC.ctrlr.currentQueryStatus.isQueryRunning()) { 
+			i2b2.CRC.ctrlr.deleteCurrentQuery.cancelled = true;
+			i2b2.CRC.ctrlr.currentQueryStatus.cancelQuery();
+			i2b2.CRC.ctrlr.currentQueryStatus = false;
+			return void(0);
+		}
+
+        if (i2b2.CRC.view.QT.isShowingTemporalQueryUI)
+		{
+		    var validationResult = this.validateTemporalQuery();
+		    if ( !validationResult.isValidated )
+		    {
+			i2b2.CRC.view.QT.showDialog("Cannot Run Query", validationResult.errorMainMsg, validationResult.errorSubMsg);
+			return void(0);
+		    }
+		} // if not in temporal query mode, forbid queries with empty panels to run
+		else if (i2b2.CRC.model.queryCurrent.panels[i2b2.CRC.ctrlr.QT.temporalGroup].length < 1) // if not in temporal query mode, check to see if there is a concept 
+		{
+			alert('You must drag at least one concept into the group to run a query.');
+			return void(0);
+		}
+
+        // make sure a shrine topic has been selected
+		if (i2b2.PM.model.shrine_domain) {
+			var topicSELECT = $('queryTopicSelect');
+			if (topicSELECT.selectedIndex == null || topicSELECT.selectedIndex == 0) {
+				alert('You must select a Topic to run a SHRINE query.');
+				return void(0);
+			}
+			var topicid = topicSELECT.options[topicSELECT.selectedIndex].value;
+		}
+
+        // // callback for dialog submission
+		var handleSubmit = function() {
+		// 	// submit value(s)
+		// 	if(this.submit()) {
+		// 		// run the query
+		// 		//if(jQuery("input:checkbox[name=queryType]:checked").length > 0){ // WEBCLIENT-170
+		// 		var t = $('derivedConceptQryRun');
+		// 		var queryNameInput = t.select('INPUT.inputQueryName')[0];
+		// 		var options = {};
+		// 		var t2 = t.select('INPUT.chkQueryType');
+		// 		for (var i=0;i<t2.length; i++) {
+		// 			if (t2[i].checked == true) {
+		// 				options['chk_'+t2[i].value] = t2[i].checked;
+		// 			}
+		// 		}				
+        //             if (typeof i2b2.CRC.cfg.cellParams['QUERY_OPTIONS_XML'] !== "undefined") {
+        //                 options['QUERY_RUN_TYPE'] = jQuery("#CRC_QUERY_TYPE option:selected")[0].value;
+        //             }
+		// 		$('queryName').innerHTML = queryNameInput.value;
+		// 		i2b2.CRC.model.queryCurrent.name = queryNameInput.value;
+		// 		i2b2.CRC.ctrlr.mQryTool._derivedConceptQueryRun(queryNameInput.value, options);
+		// 	}
+		}
+		// // display the query name input dialog
+		// this._derivedConceptPromptRun(handleSubmit);
+
+        var myDate=new Date();
+
+		var hours = myDate.getHours()
+		if (hours < 10){
+			hours = "0" + hours
+		}
+		var minutes = myDate.getMinutes()
+		if (minutes < 10){
+			minutes = "0" + minutes
+		}
+		var seconds = myDate.getSeconds()
+		if (seconds < 10){
+			seconds = "0" + seconds
+		}
+		// var ds = myDate.toLocaleString();
+		var ts = hours + ":" + minutes + ":" + seconds; //ds.substring(ds.length-5,ds.length-13);
+		var defQuery = this._getQueryXML.call(this);
+		var qn = defQuery.queryAutoName+'@'+ts;
+		// display name
+		var queryNameInput = $('patientSetQryRun').select('INPUT.inputQueryName')[0];
+		queryNameInput.value = qn;
+
+		let query_input_value = queryNameInput.value
+
+        document.getElementById('overlay').style.display = 'block';
+		this.loadPatientSetQryRun(query_input_value);
+
+     }
  
-     this.createDerivedConceptQryRun = function() {
+    this.createDerivedConceptQryRun = function() {
 		// function to build and run query 
 		if (i2b2.CRC.ctrlr.currentQueryStatus != false && i2b2.CRC.ctrlr.currentQueryStatus.isQueryRunning()) { 
 			i2b2.CRC.ctrlr.deleteCurrentQuery.cancelled = true;
@@ -1134,6 +1223,57 @@
 		this.loadDerivedConceptQryRun(query_input_value);
 		document.getElementById('overlay').style.display = 'block';
 	}
+
+    this._patientSetQueryRun = function(inQueryName, options) {
+        // make sure name is not blank
+		if (inQueryName.blank()) { 
+			alert('Please enter a name for this query.');
+			return;
+		}
+
+		// Query Parameters
+		var query_definition = this._getQueryXML(inQueryName);
+		var params = {
+				result_wait_time: i2b2.CRC.view.QT.params.queryTimeout,
+				psm_query_definition: query_definition.queryXML
+		}
+
+		// see if we are doing a normal run or sketchs based run
+		params['query_run_method'] = "";
+		if (typeof options['QUERY_RUN_TYPE'] !== 'undefined') {
+			params['query_run_method'] = "<query_method>"+options['QUERY_RUN_TYPE']+"</query_method>\n";
+			delete options['QUERY_RUN_TYPE'];
+		}
+
+		// SHRINE topic if we are running SHRINE query
+		if (i2b2.h.isSHRINE()) {
+			var topicSELECT = $('queryTopicSelect');
+			if (topicSELECT.selectedIndex == null || topicSELECT.selectedIndex == 0) {
+				alert("Please select a Topic to run the query.");
+				return false;
+			}
+			params.shrine_topic = "<shrine><queryTopicID>"+topicSELECT.options[topicSELECT.selectedIndex].value+"</queryTopicID></shrine>";
+		}
+
+		// generate the result_output_list (for 1.3 backend)
+
+		var result_output = "";
+		for(var name in options)
+		{
+			if (name) {
+				i++;
+				result_output += '<result_output priority_index="'+i+'" name="' + name.substring(4).toLowerCase() + '"/>\n';	
+			}
+
+		}
+		params.psm_result_output = '<result_output_list>'+result_output+'</result_output_list>\n';
+
+		// create query object
+		
+		$('runBoxText').innerHTML = "Cancel Query";
+		i2b2.CRC.ctrlr.currentQueryStatus = new i2b2.CRC.ctrlr.MQryStatusPatient($('infoQueryStatusText'));
+        i2b2.CRC.ctrlr.currentQueryStatus.patientSetstartQuery(inQueryName, params);
+    }
 
     //  ================================================================================================== //
 	this._derivedConceptQueryRun = function(inQueryName, options) {
@@ -1271,6 +1411,26 @@
 		i2b2.CRC.view.derivedConceptQryRun.center();
 		i2b2.CRC.view.derivedConceptQryRun.show();
 	}
+
+    this.loadPatientSetQryRun= function(qryTxt) {
+        var t = $('patientSetQryRun');
+		var queryNameInput = qryTxt;
+		i2b2.CRC.ctrlr.QT.setQueryName = qryTxt;
+		var options = {};
+		var t2 = t.select('INPUT.chkQueryType');
+		for (var i=0;i<t2.length; i++) {
+			if (t2[i].checked == true) {
+				options['chk_'+t2[i].value] = t2[i].checked;
+			}
+		}				
+			if (typeof i2b2.CRC.cfg.cellParams['QUERY_OPTIONS_XML'] !== "undefined") {
+				options['QUERY_RUN_TYPE'] = jQuery("#CRC_QUERY_TYPE option:selected")[0].value;
+			}
+		$('queryName').innerHTML = queryNameInput;
+		i2b2.CRC.model.queryCurrent.name = queryNameInput;
+		i2b2.CRC.ctrlr.mQryTool._patientSetQueryRun(queryNameInput, options);
+    }
+
     // 	================================================================================================== //
 	this.loadDerivedConceptQryRun= function(qryTxt) {
 		var t = $('derivedConceptQryRun');

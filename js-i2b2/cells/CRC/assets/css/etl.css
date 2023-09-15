@@ -412,3 +412,19 @@ table.table-container tr td:hover .tooltiptext {
 #selectList {
     padding: 3px 5px;
 }
+
+.Tabulation-cell-container{
+    height: 28px;
+    text-align: center;
+    vertical-align: middle;
+    display: table-cell;
+    width: 100rem;
+}
+
+hr.tabulation-hr-line {
+    height: 1px;
+    border-width: 0px;
+    color: #9a9a9a;
+    background-color: #9a9a9a;
+    margin: 0px;
+}

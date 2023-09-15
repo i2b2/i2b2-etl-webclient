@@ -6,6 +6,7 @@ body {
 	line-height:16px;
 	background:url('images/background.gif');
 	background-color:#D9ECF0;
+	background-size: 80px;
 }
 
 #topBarTitle {
