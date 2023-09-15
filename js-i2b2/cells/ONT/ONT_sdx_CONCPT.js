@@ -55,14 +55,15 @@ i2b2.sdx.TypeControllers.CONCPT.RenderHTML= function(sdxData, options, targetDiv
 	var render = {html: retHtml, htmlID: id};
 	var conceptId = sdxData.name;
 	var id = "ONT_TID-" + i2b2.GUID();
-
 	// process drag drop controllers
 	if (!Object.isUndefined(options.dragdrop)) {
 // NOTE TO SELF: should attachment of node dragdrop controller be handled by the SDX system as well? 
 // This would ensure removal of the onmouseover call in a cross-browser way
 		//===========Commented for M-release===========//
 		var queryTab = document.getElementById('tabQuery');
+		var tabEtl = document.getElementById('tabEtl');
 		var tabulationReport = document.getElementById('tabTabulation');
+		var patientSetTabulationReport = document.getElementById('tabPatientTabulation');
 		var sankeyTab = document.getElementById('tabSankey');
 		var d3Tab = document.getElementById('tabD3');
 		
@@ -76,14 +77,20 @@ i2b2.sdx.TypeControllers.CONCPT.RenderHTML= function(sdxData, options, targetDiv
 		} 
 		else if (hasClass(tabulationReport, 'active')) {
 			var sDD = ' draggable="true" style="cursor: pointer;" ondragstart="i2b2.CRC.view.tabulationReport.handleOnDragStart(event,\'' + encodeURI(JSON.stringify(conceptDetails)) + '\')" onmouseout="i2b2.sdx.TypeControllers.CONCPT.RemoveHighlight(\'' + id + '\')" ';
-		} 
+		}
+		else if (hasClass(patientSetTabulationReport, 'active')) {
+			var sDD = ' draggable="true" style="cursor: pointer;" ondragstart="i2b2.CRC.view.tabulationReport.patientSetHandleOnDragStart(event,\'' + encodeURI(JSON.stringify(conceptDetails)) + '\')" onmouseout="i2b2.sdx.TypeControllers.CONCPT.RemoveHighlight(\'' + id + '\')" ';
+		}
 		else if (hasClass(queryTab, 'active') === true) {
+			var sDD = ' onmouseover="' + options.dragdrop + '(\'' + targetDiv.id + '\',\'' + id + '\')" onmouseout="i2b2.sdx.TypeControllers.CONCPT.RemoveHighlight(\'' + id + '\')" ';
+		} 
+		else if (hasClass(tabEtl, 'active') === true) {
 			var sDD = ' onmouseover="' + options.dragdrop + '(\'' + targetDiv.id + '\',\'' + id + '\')" onmouseout="i2b2.sdx.TypeControllers.CONCPT.RemoveHighlight(\'' + id + '\')" ';
 		}
 		else if (hasClass(sankeyTab, 'active') === true) {
 			var sDD = '  draggable="true"  ondragstart="startDrag(event, \''+ encodeURI(conceptDetails.conceptPath) +'\', \''+ encodeURI(conceptDetails.conceptName) +'\')" onmouseout="i2b2.sdx.TypeControllers.CONCPT.RemoveHighlight(\'' + id + '\')" ';
 		}
-		else if (hasClass(d3Tab, 'active') === true) {	
+		else if (hasClass(d3Tab, 'active') === true) {
 			var sDD = '  draggable="true"  ondragstart="i2b2.CRC.view.D3.handleDragStart(event, \''+ encodeURI(conceptDetails.conceptPath) +'\', \''+ encodeURI(conceptDetails.conceptName) +'\')" ondragend="i2b2.CRC.view.D3.handleDragEnd(event)" onmouseout="i2b2.sdx.TypeControllers.CONCPT.RemoveHighlight(\'' + id + '\')" ';
 		} else {
 			console.log('No tab');
@@ -192,29 +199,53 @@ i2b2.sdx.TypeControllers.CONCPT.RenderHTML= function(sdxData, options, targetDiv
 	//Added to provide tooltip information for concepts/terms
 	var v_tooltip = '';
 
+	// try{
+	// 	if (($('ONTNAVshowShortTooltips').checked) || ($('ONTFINDshowShortTooltips').checked) )
+	// 	{
+	// 		// v_tooltip += 'title="'+ sdxData.origData.name;
+	// 		// v_tooltip += 'ontology_tooltip="'+ sdxData.origData.name;
+	// 	} else 
+	// 	{
+	// 		// v_tooltip += 'title="'+ sdxData.origData.tooltip;			
+	// 		// v_tooltip += 'ontology_tooltip="'+ sdxData.origData.tooltip;						
+	// 	}
+
+	// 	if ((($('ONTNAVshowCodeTooltips').checked) || ($('ONTFINDshowCodeTooltips').checked) )
+	// 			&& !Object.isUndefined(sdxData.origData.basecode))
+	// 	{
+	// 		v_tooltip += " - " + sdxData.origData.basecode;
+	// 	}
+
+	// 	v_tooltip += '" ';
+	// }
+	// catch(e){
+	// 	v_tooltip = '';
+	// }
+
+	// **** Render the HTML ***
+	// var retHtml = '<DIV id="' + id + '" '+ v_tooltip + sMainEvents + 'class="ontology" style="cursor:pointer;">';
+	var retHtml = '<DIV id="' + id + '" ' + sMainEvents + 'class="ontology" style="cursor:pointer;">';
+	// adding the tooltip content in the form of HTML
 	try{
 		if (($('ONTNAVshowShortTooltips').checked) || ($('ONTFINDshowShortTooltips').checked) )
 		{
-			v_tooltip += 'title="'+ sdxData.origData.name;
+			retHtml += '<span class="tooltiptext">' + sdxData.origData.name + '</b></span>';
 		} else 
 		{
-			v_tooltip += 'title="'+ sdxData.origData.tooltip;			
+			retHtml += '<span class="tooltiptext">' + sdxData.origData.tooltip + '</b></span>';				
 		}
 
 		if ((($('ONTNAVshowCodeTooltips').checked) || ($('ONTFINDshowCodeTooltips').checked) )
 				&& !Object.isUndefined(sdxData.origData.basecode))
 		{
-			v_tooltip += " - " + sdxData.origData.basecode;
+			retHtml += '<span class="tooltiptext">' + " - " + sdxData.origData.basecode + '</b></span>';
 		}
 
-		v_tooltip += '" ';
 	}
 	catch(e){
 		v_tooltip = '';
 	}
 
-	// **** Render the HTML ***
-	var retHtml = '<DIV id="' + id + '" '+ v_tooltip + sMainEvents + ' style="cursor:pointer;">';
 	retHtml += '<DIV ';
 	if (Object.isString(options.cssClass)) {
 		retHtml += ' class="'+options.cssClass+'" ';

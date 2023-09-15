@@ -38,13 +38,8 @@
      let loginHeader = new Headers();
      loginHeader.set('Authorization', 'Basic ' + btoa(username + ":" + sessionId));
  
-     var requestOptions = {
-         method: 'GET',
-         headers: loginHeader
-     };
- 
      try {
-         const response = await fetch(API_BASE_URL + "/cdi-api/check-database?loginProject=" + loginProjectName, requestOptions);
+         const response = await fetchGet(API_BASE_URL + "/etl/checkUserDatabase?loginProject=" + loginProjectName, { headers : loginHeader });
          const responseData = await response.json();
  
          enableEtlBtn(responseData);
@@ -131,7 +126,7 @@
   function uploadFile(files,inputLabel,inputLabelValue){
     const xhr = new XMLHttpRequest();
     var params = "loginProject="+ i2b2.PM.model.login_project;
-    xhr.open("POST",apiUrl+'/cdi-api/data'+'?'+params, true);
+    xhr.open("POST",apiUrl+'/etl/data'+'?'+params, true);
     showLogApiResponse(" Printing logs..");
     xhr.withCredentials = true;
     xhr.responseType = 'json';
@@ -358,15 +353,12 @@
  
      var etlUrl;
      if (eventName === 'DELETE') {
-         etlUrl = apiUrl+'/cdi-api/data?loginProject=' + loginProject;
+         etlUrl = apiUrl+'/etl/data?loginProject=' + loginProject;
      } else if (eventName === 'UNDO') {
-         etlUrl = apiUrl+'/cdi-api/data?loginProject=' + loginProject + '&operation=UNDO';
+         etlUrl = apiUrl+'/etl/data?loginProject=' + loginProject + '&operation=UNDO';
      }
  
-     fetch(etlUrl, {
-             method: 'DELETE',
-             headers: loginHeader
-         })
+     fetchDelete(etlUrl, { headers : loginHeader })
          .then(response => response)
          .then(result => {
              if(result.ok) {
@@ -418,32 +410,39 @@
       loginHeaders.set('Authorization', 'Basic ' + btoa(username + ":" + sessionId));
       loginHeaders.set('Cache-Control','no-cache');
   
-      let response  = await fetch(apiUrl+'/cdi-api/logs?loginProject=' + loginProject, {
+      let response  = await fetch(apiUrl+'/etl/logs?loginProject=' + loginProject, {
           method: 'GET',headers: loginHeaders
           });
       if (response.ok) {
-          let logs = await response.text();
-          // Apply colours to log string
-          logs = applyColoursToLogString(logs);
-          showLogApiResponse('Printing...\n' + logs)
-          
-          // Refresh ontology
-          i2b2.ONT.ctrlr.gen.loadCategories();
-          i2b2.ONT.view.nav.PopulateCategories();
-          
-          if (isBreakInterval(logs)) {
-              clearTimeout(intervalId);
-              showLogApiResponse(logs);
-              i2b2.CRC.view.etl.buttonDisplay();
-          }
-          
-          // Scroll to bottom
-          var pre = jQuery("#logApiResponse");
-          pre.scrollTop( pre.prop("scrollHeight") );
-          displayBtn();
+          // Call the API again if content is not available on ETL backend log file.
+          if (response.status == 204) {
+            showEtlLogs();
+          } else {
+            let logs = await response.text();
+            console.log(response);
+            console.log(logs);
+            // Apply colours to log string
+            logs = applyColoursToLogString(logs);
+            showLogApiResponse('Printing...\n' + logs)
+            
+            // Refresh ontology
+            i2b2.ONT.ctrlr.gen.loadCategories();
+            i2b2.ONT.view.nav.PopulateCategories();
+            
+            if (isBreakInterval(logs)) {
+                clearTimeout(intervalId);
+                showLogApiResponse(logs);
+                i2b2.CRC.view.etl.buttonDisplay();
+            }
+            
+            // Scroll to bottom
+            var pre = jQuery("#logApiResponse");
+            pre.scrollTop( pre.prop("scrollHeight") );
+            displayBtn();
+        }
       } else {
-          let errJson = await response.json();
-          showLogApiResponse("Couldn't get logs<br>Status: "+response.status+" "+response.statusText + "<br>Error Message: " + errJson.error);
+        let errJson = await response.json();
+        showLogApiResponse("Couldn't get logs<br>Status: "+response.status+" "+response.statusText + "<br>Error Message: " + errJson.error);
       }
   }
   

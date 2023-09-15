@@ -13,6 +13,7 @@ console.group('Load & Execute component file: cells > PM > ctrlr');
 console.time('execute time');
 
 i2b2.PM.setSession;
+
 // ================================================================================================== //
 i2b2.PM.doLogin = function() {
 	i2b2.PM.model.shrine_domain = false;
@@ -95,9 +96,9 @@ i2b2.PM.doLogin = function() {
 
 }
 
-
 // ================================================================================================== //
 i2b2.PM._processUserConfig = function (data) {
+
 	console.group("PROCESS Login XML");
 	console.debug(" === run the following command in Firebug to view message sniffer: i2b2.hive.MsgSniffer.show() ===");
 
@@ -120,6 +121,7 @@ i2b2.PM._processUserConfig = function (data) {
 
 	// save the valid data that was passed into the PM cell's data model
 	i2b2.PM.model.login_username = data.msgParams.sec_user;
+	
 	try {
 		var t = i2b2.h.XPath(data.refXML, '//user/password')[0]; //[@token_ms_timeout]
 		i2b2.PM.model.login_password = i2b2.h.Xml2String(t);
@@ -169,9 +171,7 @@ i2b2.PM._processUserConfig = function (data) {
 			i2b2.PM.model.otherAuthMethod = true;
 		}
 	} catch(e) {}
-	
-	
-	
+		
 	i2b2.PM.model.login_domain = data.msgParams.sec_domain;
 	i2b2.PM.model.shrine_domain = Boolean.parseTo(data.msgParams.is_shrine);
 	i2b2.PM.model.login_project = data.msgParams.sec_project;
@@ -286,6 +286,7 @@ i2b2.PM._processUserConfig = function (data) {
 		// display list of possible projects for the user to select
 		i2b2.PM.view.modal.projectDialog.showProjects();
 	}
+
 }
 
 // ================================================================================================== //

@@ -571,26 +571,19 @@
              var queryName = i2b2.CRC.ctrlr.QT.setQueryName;	
          }
          
-         let loginProjectName = i2b2.PM.model.login_project;
-         let getSessionData = JSON.parse(sessionStorage.getItem('loginCredentials')); 
-         let sessionId = getSessionData["session_id"];
-         let username = getSessionData["user_name"];
- 
-         let loginHeader = new Headers();
-         loginHeader.set('Authorization', 'Basic ' + btoa(username + ":" + sessionId));
-	     loginHeader.append('X-Project-Name', loginProjectName)
  
          var requestOptions = {
              method: 'GET',
-             headers: loginHeader,
+             headers: getnewAPIFetchHeader(),
              credentials: 'include'
          };
  
          try {
             //  const response = await fetch(M_QRY_STATUS_BASE_URL + "/api/derived-concepts/querymaster?name=" + queryName, requestOptions);
-             const response = await fetch(M_QRY_STATUS_BASE_URL + "/cdi-api/querymaster?name=" + queryName, requestOptions);
+             const response = await fetch(M_QRY_STATUS_BASE_URL + "/etl/querymaster?name=" + queryName, requestOptions);
              const responseData = await response.json();
-             document.getElementById('code').value = responseData.name;
+             responseData.generatedSql = responseData.generatedSql.replace(responseData.name, "{DERIVED_CONCEPT_CODE_PLACEHOLDER}");
+             document.getElementById('code').value = responseData.name.replace(/\s/g,"");
              document.getElementById('factQuery').value = responseData.generatedSql;
              return responseData;
          }
@@ -600,7 +593,7 @@
    }
 
     async function addDerivedConcept() {
-        let codeValue = document.getElementById('code').value;
+        let codeValue = document.getElementById('code').value.slice(0,49);
         let codeIndex = (codeValue.substring(codeValue.indexOf(")")+1)).trim();
         let cPath = i2b2.CRC.view.displayTabs.formatPathWithSlash(document.getElementById('path').value);
         let derivedConceptPath = i2b2.CRC.view.displayTabs.modifyPathWithTitle(cPath, 'Derived');
@@ -608,32 +601,27 @@
             "description": document.getElementById('description').value,
             "path": derivedConceptPath,
             "code": codeIndex,
-            "factQuery": document.getElementById('factQuery').value,
-            "type": document.getElementById("type1").checked ? 'TEXTUAL' : 'NUMERIC'
+            "factQuery": document.getElementById('factQuery').value.replace("{DERIVED_CONCEPT_CODE_PLACEHOLDER}", codeIndex),
+            "type": document.getElementById("type1").checked ? 'TEXTUAL' : 'NUMERIC',
+            "definitionType": 'DERIVED'
         })
     
-        let loginProjectName = i2b2.PM.model.login_project;
-        let getSessionData = JSON.parse(sessionStorage.getItem('loginCredentials')); 
-        let sessionId = getSessionData["session_id"];
-        let username = getSessionData["user_name"];
- 
-        let loginHeader = new Headers();
-        loginHeader.set('Authorization', 'Basic ' + btoa(username + ":" + sessionId));
-	    loginHeader.append('X-Project-Name', loginProjectName)
 
         var requestOptions = {
             method: 'POST',
-            headers: loginHeader,
+            headers: getnewAPIFetchHeader(),
             body: rawData,
             credentials: 'include'
         };
             
         try {
             // const response = await fetch(M_QRY_STATUS_BASE_URL + "/api/derived-concepts", requestOptions);
-            const response = await fetch(M_QRY_STATUS_BASE_URL + "/cdi-api/derived-concepts", requestOptions);
+            const response = await fetch(M_QRY_STATUS_BASE_URL + "/etl/concepts", requestOptions);
             const responseData = await response.json();
             
-            i2b2.ONT.view.mInfo.calculateFacts(responseData);
+            // removing the calculate facts api as creation of derived concepts includes computation in backend also.
+            // i2b2.ONT.view.mInfo.calculateFacts(responseData);
+            
             i2b2.ONT.view.nav.doRefreshAll();
             return responseData;
         }

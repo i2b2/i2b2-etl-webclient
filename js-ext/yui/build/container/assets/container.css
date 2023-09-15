@@ -150,8 +150,10 @@ PLEASE NOTE:
     right: 0;
     bottom: 0;
     left: 0;
+    height: 0px;
+    width: 0px; 
 
-}
+} 
 
 .yui-panel-container.matte {
 
@@ -159,8 +161,7 @@ PLEASE NOTE:
     background-color: #fff;
 
 }
-
-.yui-panel-container.shadow .underlay {
+ .yui-panel-container.shadow .underlay {
 
     top: 3px;
     bottom: -3px;
@@ -170,7 +171,7 @@ PLEASE NOTE:
     opacity: .12;
     filter: alpha(opacity=12);  /* For IE */
 
-}
+ } 
 
 /* 
    Workaround for Safari 2.x - the yui-force-redraw class is applied, and then removed when

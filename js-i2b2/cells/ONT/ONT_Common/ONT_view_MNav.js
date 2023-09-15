@@ -35,13 +35,16 @@ i2b2.ONT.view.mNav.CMenuValidate = function(contextRecord, tvNode, mil) {
     var element = document.getElementById(contextRecord.renderData.htmlID);
     if (element !== null && (i2b2.PM.model.userRoles.includes('DATA_AUTHOR') && i2b2.sdx.TypeControllers.MConcept.errorStatusCode === 200)) {
         window.mainNodeDerivedData.forEach(el => {
-            if (el.path == contextRecord.origData.dim_code) {
+            if (el.concept_path == contextRecord.origData.dim_code) {
                 contextRecord.origData.derivedId = el.id;
                 contextRecord.origData.derivedCode = el.code
+                contextRecord.origData.concept_path = el.concept_path
                 
                 mil.push({ text: "Edit", onclick: { fn: i2b2.ONT.view.mInfo.editDerivedConcept, obj: contextRecord }});
 
                 mil.push({ text: "Delete", onclick: { fn: i2b2.ONT.view.mInfo.deleteDerivedConcept, obj: contextRecord }});
+
+                mil.push({ text: "Compute", onclick: { fn: i2b2.ONT.view.mInfo.computeDerivedConcept, obj: contextRecord }});
             }
         })
     }

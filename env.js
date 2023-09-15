@@ -2,6 +2,7 @@ const env = {
     etl: true,
     tabulation: false,
     derivedConcept: false,
+    patientSet: false,
     d3: false,
     facts: false,
     factsAll: false,

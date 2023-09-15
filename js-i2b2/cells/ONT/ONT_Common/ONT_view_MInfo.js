@@ -16,26 +16,43 @@ i2b2.ONT.view.mInfo = new i2b2Base_cellViewController(i2b2.ONT, 'mInfo');
  
 const VIEW_MINFO_BASE_URL = window.location.origin;
 
+i2b2.ONT.view.mInfo.computeDerivedConcept = async function(p_sType, p_aArgs, p_oValue) {
+
+	var requestOptions = {
+		method: 'POST',
+		headers: getnewAPIFetchHeader(),
+		credentials: 'include'
+	};
+	i2b2.CRC.view.LoadingMask.show("Computing...");
+	fetch(VIEW_MINFO_BASE_URL + "/etl/compute-facts?cpath=" + p_oValue.origData.concept_path, requestOptions)
+				.then((response) => {
+					i2b2.CRC.view.LoadingMask.hide();
+					return response.json();
+				})
+				.catch(error => console.warn(error));
+}
+
 i2b2.ONT.view.mInfo.editDerivedConcept = async function(p_sType, p_aArgs, p_oValue) {
 	document.getElementById('overlay').style.display = 'block';
 
 	var requestOptions = {
 		method: 'GET',
-		headers: getAPIFetchHeader(),
+		headers: getnewAPIFetchHeader(),
 		credentials: 'include'
 	};
 	
 	try {
-		const response = await fetch(VIEW_MINFO_BASE_URL + "/api/derived-concepts/" + p_oValue.origData.derivedId, requestOptions);
+		// const response = await fetch(VIEW_MINFO_BASE_URL + "/api/derived-concepts/" + p_oValue.origData.derivedId, requestOptions);
+		const response = await fetch(VIEW_MINFO_BASE_URL + "/etl/concepts?cpath=" + p_oValue.origData.concept_path, requestOptions);
 		const responseData = await response.json();
 		
 		document.getElementById('overlay').style.display = 'none';
-		i2b2.ONT.view.mInfo.editDerivedConceptForm(responseData);
+		i2b2.ONT.view.mInfo.editDerivedConceptForm(responseData[0]);
 
-		$('editDerivedConceptDialog').select('INPUT#descriptionE')[0].value = responseData.description;
-		$('editDerivedConceptDialog').select('INPUT#pathE')[0].value = responseData.path;
-		$('editDerivedConceptDialog').select('INPUT#codeE')[0].value = responseData.code;
-		$('editDerivedConceptDialog').select('TEXTAREA#factQueryE')[0].value = responseData.factQuery;
+		$('editDerivedConceptDialog').select('INPUT#descriptionE')[0].value = responseData[0].description;
+		$('editDerivedConceptDialog').select('INPUT#pathE')[0].value = responseData[0].concept_path;
+		$('editDerivedConceptDialog').select('INPUT#codeE')[0].value = responseData[0].concept_cd;
+		$('editDerivedConceptDialog').select('TEXTAREA#factQueryE')[0].value = responseData[0].derived_concept_script;
 
 		var radioBtn = document.getElementsByName('typeE');
 		for (var x = 0; x < radioBtn.length; x++) {
@@ -58,17 +75,19 @@ i2b2.ONT.view.mInfo.editDerivedConceptForm = function(filteredData) {
 				"path": $('editDerivedConceptDialog').select('INPUT#pathE')[0].value,
 				"code": $('editDerivedConceptDialog').select('INPUT#codeE')[0].value,
 				"factQuery": $('editDerivedConceptDialog').select('TEXTAREA#factQueryE')[0].value,
-				"type": document.getElementById("typeE1").checked ? 'TEXTUAL' : 'NUMERIC'
+				"type": document.getElementById("typeE1").checked ? 'TEXTUAL' : 'NUMERIC',
+				"definitionType": 'DERIVED'
 			})
 
 			var requestOptions = {
 				method: 'PUT',
-				headers: getAPIFetchHeader(),
+				headers: getnewAPIFetchHeader(),
 				body: rawData,
 				credentials: 'include'
 			};
 
-			fetch(VIEW_MINFO_BASE_URL + "/api/derived-concepts/" + filteredData.id, requestOptions)
+			// fetch(VIEW_MINFO_BASE_URL + "/api/derived-concepts/" + filteredData.id, requestOptions)
+			fetch(VIEW_MINFO_BASE_URL + "/etl/concepts?cpath=" + filteredData.concept_path, requestOptions)
 				.then((response) => {
 					return response.json();
 				})
@@ -84,23 +103,15 @@ i2b2.ONT.view.mInfo.editDerivedConceptForm = function(filteredData) {
 }
 
 i2b2.ONT.view.mInfo.calculateFacts = function(data) {
-	let loginProjectName = i2b2.PM.model.login_project;
-    let getSessionData = JSON.parse(sessionStorage.getItem('loginCredentials')); 
-    let sessionId = getSessionData["session_id"];
-    let username = getSessionData["user_name"];
- 
-	let loginHeader = new Headers();
-    loginHeader.set('Authorization', 'Basic ' + btoa(username + ":" + sessionId));
-	loginHeader.append('X-Project-Name', loginProjectName)
 
 	var requestOptions = {
 		method: 'POST',
-		headers: loginHeader,
+		headers: getnewAPIFetchHeader(),
 		credentials: 'include'
 	};
 
 	// fetch(VIEW_MINFO_BASE_URL + "/api/derived-concepts/" + data.id + "/calculate-facts", requestOptions)
-	fetch(VIEW_MINFO_BASE_URL + "/cdi-api/compute-facts?path="+data.path, requestOptions)
+	fetch(VIEW_MINFO_BASE_URL + "/etl/compute-facts?cpath="+data.concept_path, requestOptions)
 		.then((response) => {
 			return response.json();
 		})
@@ -159,34 +170,29 @@ i2b2.ONT.view.mInfo.createDerivedConceptTemplate = async function(p_sType, p_aAr
 				"description": $('createDerivedConceptTempDialog').select('INPUT#dcDescription')[0].value,
 				"type": 'NUMERIC',
 				"queryTemplateName": $('createDerivedConceptTempDialog').select('#dcTemplate :selected')[0].value,
-				"rawConceptPath": (p_oValue.origData.dim_code).replace(/\\/g, "\\\\"),
+				"rawConceptPath": (p_oValue.origData.dim_code).replace(/\\/g, "\\"),
 				"temporalConstraintConceptPath1": i2b2.ONT.view.mInfo.tempConstraintDiv1ConceptPath ? i2b2.ONT.view.mInfo.tempConstraintDiv1ConceptPath.replace(/\\/g, "\\\\") : null,
-				"temporalConstraintConceptPath2": i2b2.ONT.view.mInfo.tempConstraintDiv2ConceptPath ? i2b2.ONT.view.mInfo.tempConstraintDiv2ConceptPath.replace(/\\/g, "\\\\") : null
+				"temporalConstraintConceptPath2": i2b2.ONT.view.mInfo.tempConstraintDiv2ConceptPath ? i2b2.ONT.view.mInfo.tempConstraintDiv2ConceptPath.replace(/\\/g, "\\\\") : null,
+				"definitionType": 'DERIVED'
 			})
-
-			let loginProjectName = i2b2.PM.model.login_project;
-     		let getSessionData = JSON.parse(sessionStorage.getItem('loginCredentials')); 
-     		let sessionId = getSessionData["session_id"];
-     		let username = getSessionData["user_name"];
- 
-     		let loginHeader = new Headers();
-     		loginHeader.set('Authorization', 'Basic ' + btoa(username + ":" + sessionId));
-	 		loginHeader.append('X-Project-Name', loginProjectName)
 
 			var requestOptions = {
 				method: 'POST',
-				headers: loginHeader,
+				headers: getnewAPIFetchHeader(),
 				body: payload,
 				credentials: 'include'
 			};
 
 			// fetch(VIEW_MINFO_BASE_URL + "/api/derived-concepts/", requestOptions)
-			fetch(VIEW_MINFO_BASE_URL + "/cdi-api/derived-concepts", requestOptions)
+			fetch(VIEW_MINFO_BASE_URL + "/etl/concepts", requestOptions)
 				.then((response) => {
 					return response.json();
 				})
 				.then((responseData) => {
-					i2b2.ONT.view.mInfo.calculateFacts(responseData);
+					// i2b2.ONT.view.mInfo.calculateFacts(responseData);
+					if(responseData?.status=='failed'){
+						alert(responseData?.error)
+					}
 					i2b2.ONT.view.nav.doRefreshAll();
 					return responseData;
 				})
@@ -218,8 +224,9 @@ i2b2.ONT.view.mInfo.createDerivedConceptTempDialog = function(handleSubmit, p_oV
 	i2b2.CRC.view.createDerivedConceptTempDialog = new YAHOO.widget.SimpleDialog("createDerivedConceptTempDialog", {
 		width: "400px",
 		fixedcenter: true,
-		constraintoviewport: false,
-		close: false,
+		constraintoviewport: true,
+		close: true,
+		modal: true,
 		zindex: 700,
 		buttons: [{
 			text: "Save",
@@ -250,7 +257,7 @@ i2b2.ONT.view.mInfo.createDerivedConceptTempDialog = function(handleSubmit, p_oV
 	i2b2.ONT.view.mInfo.rawDerivedConceptObj = p_oValue.origData;
 
 	let dcPath = origConceptPath(p_oValue.origData) + " - MIN";
-	let dcCode = p_oValue.origData.basecode + "-MIN";
+	let dcCode = p_oValue.origData.basecode.slice(0,29) + "-MIN";
 	let dcDesc = "The Minimum value of the " + p_oValue.origData.name;
 	updateDerivedConceptInputFields(dcPath, dcCode, dcDesc);
 }
@@ -283,24 +290,15 @@ i2b2.ONT.view.mInfo.createMLPredictionTemplate = async function(p_sType, p_aArgs
 
 			console.log(payload)
 
-			let loginProjectName = i2b2.PM.model.login_project;
-     		let getSessionData = JSON.parse(sessionStorage.getItem('loginCredentials')); 
-     		let sessionId = getSessionData["session_id"];
-     		let username = getSessionData["user_name"];
- 
-     		let loginHeader = new Headers();
-     		loginHeader.set('Authorization', 'Basic ' + btoa(username + ":" + sessionId));
-	 		loginHeader.append('X-Project-Name', loginProjectName)
-
 			var requestOptions = {
 				method: 'POST',
-				headers: loginHeader,
+				headers: getnewAPIFetchHeader(),
 				body: payload,
 				credentials: 'include'
 			};
 
 			// fetch(VIEW_MINFO_BASE_URL + "/api/derived-concepts/", requestOptions)
-			fetch(VIEW_MINFO_BASE_URL + "/cdi-api/derived-concepts", requestOptions)
+			fetch(VIEW_MINFO_BASE_URL + "/etl/concepts", requestOptions)
 				.then((response) => {
 					return response.json();
 				})
@@ -349,8 +347,9 @@ i2b2.ONT.view.mInfo.createMLPredictionTempDialog = function(handleSubmit, p_oVal
 	i2b2.CRC.view.createMLPredictionTempDialog = new YAHOO.widget.SimpleDialog("createMLPredictionTempDialog", {
 		width: "400px",
 		fixedcenter: true,
-		constraintoviewport: false,
-		close: false,
+		constraintoviewport: true,
+		close: true,
+		modal: true,
 		zindex: 700,
 		buttons: [{
 			text: "Save",
@@ -362,7 +361,7 @@ i2b2.ONT.view.mInfo.createMLPredictionTempDialog = function(handleSubmit, p_oVal
 		}]
 	});
 	i2b2.ONT.view.mInfo.dCTempDialogActive = true;
-	
+	i2b2.ONT.view.nav.doRefreshAll();
 	// document.getElementById("tempConstraintDiv1").innerHTML = '';
 	// document.getElementById("tempConstraintDiv2").innerHTML = '';
 	document.getElementById("negativeConcept").innerHTML = '';
@@ -385,7 +384,7 @@ i2b2.ONT.view.mInfo.createMLPredictionTempDialog = function(handleSubmit, p_oVal
 	i2b2.ONT.view.mInfo.rawMLPredictionObj = p_oValue.origData;
 
 	let dcPath = origConceptPath(p_oValue.origData);
-	let dcCode = p_oValue.origData.basecode
+	let dcCode = p_oValue.origData.basecode.slice(0,29);
 	updateMLPredictionInputFields(dcPath, dcCode);
 }
 
@@ -450,7 +449,7 @@ function mlPredictionModifyPath (path) {
 
 var updateDerivedConceptInputFields = function (path, code, description) {
 	$('createDerivedConceptTempDialog').select('INPUT#dcPath')[0].value = modifyPath(path);
-	$('createDerivedConceptTempDialog').select('INPUT#dcCode')[0].value = code;
+	$('createDerivedConceptTempDialog').select('INPUT#dcCode')[0].value = code.slice(0, 50);
 	$('createDerivedConceptTempDialog').select('INPUT#dcDescription')[0].value = description;
 }
 
@@ -463,7 +462,7 @@ var updateMLPredictionInputFields = function (path, code, description) {
 i2b2.ONT.view.mInfo.queryTemplateNameSelected = function(event) {
 	let rawDCObj = i2b2.ONT.view.mInfo.rawDerivedConceptObj;
 	let dcPath = origConceptPath(rawDCObj);
-	let dcCode = rawDCObj.basecode;
+	let dcCode = rawDCObj.basecode.slice(0,29);
 	let dcDesc;
 
 	switch(event.target.value) {
@@ -685,16 +684,17 @@ i2b2.ONT.view.mInfo.deleteDerivedConcept = async function(p_sType, p_aArgs, p_oV
 
 	var requestOptions = {
 		method: 'GET',
-		headers: getAPIFetchHeader(),
+		headers: getnewAPIFetchHeader(),
 		credentials: 'include'
 	};
 	
 	try {
-		const response = await fetch(VIEW_MINFO_BASE_URL + "/api/derived-concepts", requestOptions);
+		// const response = await fetch(VIEW_MINFO_BASE_URL + "/api/derived-concepts", requestOptions);
+		const response = await fetch(VIEW_MINFO_BASE_URL + "/etl/concepts", requestOptions);
 		const responseData = await response.json();
 			var filtered = [];
 			for (var i = 0; i < responseData.length; i++) {
-				if (responseData[i].path == p_oValue.origData.dim_code) {
+				if (responseData[i].concept_path == p_oValue.origData.dim_code) {
 					filtered.push(responseData[i]);
 				}
 			}
@@ -713,15 +713,24 @@ i2b2.ONT.view.mInfo.deleteDerivedConcept = async function(p_sType, p_aArgs, p_oV
 }
 // ================================================================================================= //
 i2b2.ONT.view.mInfo.deleteDerivedConceptForm = function(filteredData) {
+
+	var rawData = JSON.stringify({
+		"path": filteredData[0].concept_path,
+		"definitionType": 'DERIVED'
+	})
+
+
 	var handleSubmit = function() {
 		if(this.submit()) {
 			var requestOptions = {
 				method: 'DELETE',
-				headers: getAPIFetchHeader(),
+				headers: getnewAPIFetchHeader(),
+				body: rawData,
 				credentials: 'include'
 			};
 
-			fetch(VIEW_MINFO_BASE_URL + "/api/derived-concepts/" + filteredData[0].id, requestOptions)
+			// fetch(VIEW_MINFO_BASE_URL + "/api/derived-concepts/" + filteredData[0].id, requestOptions)
+			fetch(VIEW_MINFO_BASE_URL + "/etl/concepts?cpath=" + filteredData[0].concept_path, requestOptions)
 				.then((response) => {
 					return response.json();
 				})

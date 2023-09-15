@@ -68,6 +68,79 @@
 <!-- Load Moment.js for parsing and formatting date/time -->
 <script type="text/javascript" src="js-ext/moment.min.js"></script>
 <link type="text/css" href="js-i2b2/cells/CRC/assets/query_report.css" rel="stylesheet" />
+<style type="text/css">
+  .ontology {
+    display: inline-block;
+    position: relative;
+  }
+  /* .ontology:hover:after {
+    content: attr(ontology_tooltip);
+    background: #D9ECF0;
+    font-size: 14px;
+    border-radius: 5px;
+    bottom: -32px;
+    color: #000;
+    left: 45%;
+    padding: 5px 15px;
+    position: absolute;
+    z-index: 98;
+    width: 200px;
+  } */
+  /* Tooltip text */
+  .ontology .tooltiptext {
+    visibility: hidden;
+    background: #D9ECF0;
+    font-size: 14px;
+    border-radius: 5px;
+    bottom: -32px;
+    color: #000;
+    left: 45%;
+    padding: 5px 15px;
+    position: absolute;
+    z-index: 98;
+    width: 200px;
+  }
+  .ontology:hover .tooltiptext {
+    visibility: visible;
+  }
+ .tooltip {
+  position: relative;
+  display: inline-block;
+  }
+
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+  }
+
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
+</style>
 
 <!-- Bug in IE - use MINIMUM number of LINK and STYLE tags in the DOM as possible: http://support.microsoft.com/kb/262161 -->
 <style>
@@ -286,7 +359,10 @@ function initI2B2()
 			$('menuMain').style.display = 'block';
 			$('topBar').style.display = 'block';
 			$('screenQueryData').style.display = 'block';
-			var splitterName = 'main.splitter';			
+			$('institutionLogoDiv').style.display = 'none';
+			$('hrAfterLogin').style.display = 'block';
+
+			var splitterName = 'main.splitter';
 			
 			// update dimension values
 			initBrowserViewPortDim = document.viewport.getDimensions();
@@ -446,13 +522,17 @@ YAHOO.util.Event.addListener(window, "load", init);
   </div>
   <div class="ft"></div>
 </div>
-<table border="0" cellspacing="0" cellpadding="0" width="100%" id="topBarTable">
+<table border="0" cellspacing="0" cellpadding="0" width="100%" id="topBarTable" style="height: 30px; top: -10px;">
   <tr>
     <td align="left" valign="middle"><img id="topBarTitle" border="0" alt="" /></td>
-    <td align="left" valign="middle"><div id="viewMode-Project"></div></td>
-    <td align="right" valign="middle"><div id="viewMode-User"></div></td>
+    <td align="left" valign="middle" style="padding-right: 80px; padding-left: 0px; font-size: 18px;"><div id="client-name"></div></td>
+    <td style="font-size: 11px;">
+      <span><div id="viewMode-Project"></div></span> 
+      <hr id="hrAfterLogin" style="display: none;">
+      <span><div id="viewMode-User"></div></span>
+    </td>
     <td align="right" valign="middle"><div id="topBar"> 
-            <span id="menuLogin">
+          <span id="menuLogin">
            WebClient v1.7.12a &nbsp;|&nbsp; <a id="helpLink" href="Javascript:void(0)" onClick="i2b2.hive.HelpViewer.show();">Help</a>
       		</span>
         <!--        <form name="projectsForm" style="margin: 0pt; padding: 0pt;" onSubmit="i2b2.PM.selectProject(); return false;">
@@ -471,10 +551,13 @@ YAHOO.util.Event.addListener(window, "load", init);
 		</span>
   </tr>
 </table>
-<div id="screenQueryData" style="display:none"> 
+<div id="institutionLogoDiv" style="display:block;">
+</div>
+<div id="screenQueryData" style="display:none; margin-top: 15px;">
 
   
   <!-- ############### <ONT View> ############### -->
+  <!-- TBD: Query tool All tabs is here  -->
   <div id="ontMainBox" style="display:none">
     <div id="ontTopTabs">
       <div style="position:absolute;z-index:200;">
@@ -495,7 +578,7 @@ YAHOO.util.Event.addListener(window, "load", init);
         </div>   
         <div id="guestTabQuerySearch" class="tabBox" style="display:None" onClick="i2b2.ONT.view.main.ZoomView(); i2b2.CRC.view.history.ZoomView(); i2b2.CRC.view.history.selectTab('find')"; >
           <div>Find Qry</div>
-        </div>     
+        </div>
       </div>
       <div class="opXML"> 
         <!--				<a href="JavaScript:showXML('ONT',i2b2.ONT.view.main.currentTab,'Request');" class="debug"><img src="assets/images/msg_request.gif" border="0" width="16" height="16" alt="Show XML Request" title="Show XML Request" /></a> --> 
@@ -688,7 +771,7 @@ YAHOO.util.Event.addListener(window, "load", init);
   <!-- ############### </PM Parmeter View> ############### --> 
   
   <!-- ############### <WRK View> ############### -->
-  <div id="wrkWorkplace" style="display:none;">
+  <div id="wrkWorkplace" style="display:none; margin-top:20px">
     <div class="TopTabs">
         <div id="WRKguestTabNavigate" class="tabBox" style="display:None" onClick="i2b2.WORK.view.main.ZoomView(); i2b2.ONT.view.main.ZoomView(); i2b2.ONT.view.main.selectTab('nav')">
           <div>Terms</div>
@@ -724,7 +807,7 @@ YAHOO.util.Event.addListener(window, "load", init);
   <!-- ############### </WRK View> ############### --> 
   
   <!-- ############### <CRC History View> ############### -->
-  <div id="crcHistoryBox" style="display:none;">
+  <div id="crcHistoryBox" style="display:none; margin-top:20px">
     <div class="TopTabs">
       <div style="position:absolute;z-index:200;">
         <div id="CRCguestTabNavigate" class="tabBox" style="display:None" onClick="i2b2.CRC.view.history.ZoomView(); i2b2.ONT.view.main.ZoomView(); i2b2.ONT.view.main.selectTab('nav')">
@@ -803,6 +886,7 @@ YAHOO.util.Event.addListener(window, "load", init);
         <div id="tabQuery" class="tabBox active" onclick="i2b2.CRC.view.displayTabs.openTab(event, 'QT')"><div>Query Tool</div></div>
         <div id="tabEtl" class="tabBox" onclick="i2b2.CRC.view.displayTabs.openTab(event, 'Etl')" style="min-width: 40px;"><div>ETL</div></div>
         <div id="tabTabulation" class="tabBox" onclick="i2b2.CRC.view.displayTabs.openTab(event, 'Tabulation')"><div>Tabulation</div></div>
+        <div id="tabPatientTabulation" class="tabBox" onclick="i2b2.CRC.view.displayTabs.openTab(event, 'PatientSetTabulation')"><div>Patients Set Tabulation</div></div>
         <div id="tabSankey" class="tabBox" onclick="i2b2.CRC.view.displayTabs.openTab(event, 'Sankey')" style="display: none;"><div>Sankey</div></div>
         <div id="tabD3" class="tabBox" onclick="i2b2.CRC.view.displayTabs.openTab(event, 'D3')"><div>D3</div></div>
         <div id="tabFacts" class="tabBox" onclick="i2b2.CRC.view.displayTabs.openTab(event, 'Facts')"><div>Facts</div></div>
@@ -1103,6 +1187,7 @@ YAHOO.util.Event.addListener(window, "load", init);
           <div id="runBox"><a href="JavaScript:i2b2.CRC.ctrlr.QT.doQueryRun()"><span id="runBoxText">Run Query</span></a></div>
           <div id="newBox"><a href="JavaScript:i2b2.CRC.ctrlr.QT.doQueryClear();">Clear</a></div>
           <div id="createDerivedConceptBox" style="display: none;"><a href="JavaScript:i2b2.CRC.ctrlr.mQryTool.createDerivedConceptQryRun()"><span>Create Derived Concept</span></a></div>
+          <div id="createPatientSetBox" style="display: none;"><a href="JavaScript:i2b2.CRC.ctrlr.mQryTool.createPatientSetQryRun()"><span>Create Patient Set</span></a></div>
           <div id="computeDerivedFactBox" style="display: none;"><a href="JavaScript:i2b2.CRC.view.mCompute.computeDerivedFact()"><span>Compute Derived Facts</span></a></div>
           <div id="printQueryBox" style="visibility:hidden;"><a href="JavaScript:i2b2.CRC.ctrlr.QT.doPrintQuery();">Print Query</a></div>
           <div id="groupCount" style="width:75px;float:left;height:16px;overflow:hidden;"></div>
@@ -1121,6 +1206,7 @@ YAHOO.util.Event.addListener(window, "load", init);
     </div>
     <div id="Etl" class="tabcontent"></div>
     <div id="Tabulation" class="tabcontent"></div>
+    <div id="PatientSetTabulation" class="tabcontent"></div>
     <div id="D3" class="tabcontent"></div>
     <div id="Sankey" class="tabcontent"></div>
     <div id="Facts" class="tabcontent"></div>
@@ -1134,7 +1220,7 @@ YAHOO.util.Event.addListener(window, "load", init);
   </div>
   
   <!-- ############### <CRC Status View> ############### -->
-  <div id="crcStatusBox" style="display:none">
+  <div id="crcStatusBox" style="display:none; margin-top:20px">
     <div class="TopTabs">
       <div class="opXML"><!-- <a href="JavaScript:i2b2.CRC.ctrlr.QT.doPrintQuery();"><img id="qtPrintImg" width="16" height="16" border="0" src="js-i2b2/cells/CRC/assets/printer_img.gif" alt="Print Query" title="Print Query" /></a>&nbsp;--><a href="JavaScript:i2b2.CRC.view.status.ZoomView();"><img width="16" height="16" border="0" src="js-i2b2/cells/CRC/assets/zoom_icon.gif" alt="Resize Workspace" /></a></div>
       <div class="tabBox tabQueryStatus active" onClick="i2b2.CRC.view.status.selectTab('status')">
@@ -1747,7 +1833,11 @@ YAHOO.util.Event.addListener(window, "load", init);
 
   <!-- ############### <Derived Concept start> ############### --> 
   <div id="derived-concept"></div>
-  <!-- ############### <Derived Concept end> ############### --> 
+  <!-- ############### <Derived Concept end> ############### -->
+
+  <!-- ############### <Patient-Set start> ############### --> 
+    <div id="patient-set"></div>
+  <!-- ############### <Patient-Set end> ############### --> 
 
   <!-- ############### <Timeout Dialog> ############### -->
   <div id="dialogTimeout" style="display:none;">
@@ -1759,7 +1849,7 @@ YAHOO.util.Event.addListener(window, "load", init);
   </div>
   <!-- ############### </Timeout Dialog> ############### --> 
   <!-- ############### <Draggable Splitter> ############### -->
-  <div id="main.splitter" class="vertical_splitter" style="top:33px"></div>
+  <div id="main.splitter" class="vertical_splitter" style="margin-top:20px"></div>
 
   <!-- ############### tdw9 1707c: <Popup Editor for Temporal Relationships (for temporal query UI)> ############### -->
     <div id="temporalRelationshipEditor" style="display:none;">
@@ -1848,9 +1938,14 @@ YAHOO.util.Event.addListener(window, "load", init);
 <script>
   (function($){
     $(document).ready(function(){
+      fetchUserConfigData();
       if (env.derivedConcept === true) {
         $("#createDerivedConceptBox").css("display", "block");
         $('#derived-concept').load("tabs/derived-concept.html");
+      }
+      if (env.patientSet === true) {
+        $("#createPatientSetBox").css("display", "block");
+        $('#patient-set').load("tabs/patient-set.html");
       }
       if (env.computeDerivedFact === true) {
           $("#computeDerivedFactBox").css("display", "block");
@@ -1881,6 +1976,38 @@ YAHOO.util.Event.addListener(window, "load", init);
       }
     });
   })(jQuery);
+</script>
+<script>
+  var fetchUserConfigData = async function () {
+	  const API_BASE_URL = window.location.origin;
+	
+	  let response  = await fetch(API_BASE_URL+'/etl/configData', {
+		  method: 'GET'
+		});
+	  if (response.ok) {
+		
+      console.log(response);
+      
+      let resp = await response.text();
+      let respObj = JSON.parse(resp);
+
+      if (respObj['institution_name'] != '') {
+        $('client-name').innerHTML = respObj['institution_name'];
+        document.title = 'i2b2 Web Client | ' + respObj['institution_name'];
+      }
+
+      if (respObj['institution_logo_url'] != '') {
+        var url = respObj['institution_logo_url'];
+ 
+        var image = new Image();
+        image.src = url;
+        image.style = "height : 80px; width : 250px; padding-top : 30px;padding-left: 500px;padding-bottom: 100px;"
+        document.getElementById('institutionLogoDiv').appendChild(image);
+        
+      }
+	  }
+  }
+
 </script>
 </body>
 </html>

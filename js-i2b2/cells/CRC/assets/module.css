@@ -4,7 +4,8 @@ DIV#crcQueryToolBox DIV.tabBox.hideTab {
 }
 
 DIV#crcQueryToolBox DIV#computeDerivedFactBox,
-DIV#crcQueryToolBox DIV#createDerivedConceptBox {
+DIV#crcQueryToolBox DIV#createDerivedConceptBox,
+DIV#crcQueryToolBox DIV#createPatientSetBox {
     position:relative;
 	xdisplay:none;
 	background:#6677AA;
@@ -26,29 +27,33 @@ DIV#crcQueryToolBox DIV#createDerivedConceptBox {
 }
 
 DIV#crcQueryToolBox DIV#createDerivedConceptBox a,
-DIV#crcQueryToolBox DIV#computeDerivedFactBox a {
+DIV#crcQueryToolBox DIV#computeDerivedFactBox a,
+DIV#crcQueryToolBox DIV#createPatientSetBox a {
     color:#FFF;
 	display:block;
 	text-decoration:none;
 }
 
 DIV#crcQueryToolBox DIV#createDerivedConceptBox a:hover,
-DIV#crcQueryToolBox DIV#computeDerivedFactBox a:hover {
+DIV#crcQueryToolBox DIV#computeDerivedFactBox a:hover,
+DIV#crcQueryToolBox DIV#createPatientSetBox a:hover {
     background-color:#7687bf;
 }
 
 DIV#crcQueryToolBox DIV#createDerivedConceptBox,
-DIV#crcQueryToolBox DIV#computeDerivedFactBox {
+DIV#crcQueryToolBox DIV#computeDerivedFactBox,
+DIV#crcQueryToolBox DIV#createPatientSetBox {
 	min-width: 125px;
 	padding: 0px 8px;
 }
 
-#tabEtl, #tabTabulation, #tabSankey, #tabD3, #tabFacts, #tabFactsAll {
+#tabEtl, #tabTabulation, #tabSankey, #tabD3, #tabFacts, #tabFactsAll, #tabPatientTabulation {
 	display: none;
 }
 
 DIV#crcQueryToolBox DIV#createDerivedConceptBox.hide_tabs,
 DIV#crcQueryToolBox DIV#computeDerivedFactBox.hide_tabs,
+DIV#crcQueryToolBox DIV#createPatientSetBox.hide_tabs,
 DIV#crcQueryToolBox DIV.tabBox.hide_tabs {
 	display: none !important;
 }
